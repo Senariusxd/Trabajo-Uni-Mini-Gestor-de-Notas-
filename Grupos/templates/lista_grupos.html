@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div>
+    <h1 class="text-center mb-4">Lista de Grupos</h1>
+    <div class="row justify-content-center">
+      {% for grupo in grupos %}
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Año: {{ grupo.año }}</h5>
+            <a class="btn btn-primary btn-sm" href="{% url 'detalle_grupo' grupo_id=grupo.pk %}">Ver detalles</a>
+            {% if perms.Grupos.delete_grupo %}
+            <form class="d-inline" method="POST" action="{% url 'eliminar_grupo' grupo_id=grupo.pk %}">
+              {% csrf_token %}
+              <button type="button" class="btn btn-danger btn-sm float-right" onclick="showConfirmation(this)">Eliminar</button>
+              <div class="confirmation" style="display: none;">
+                <p>¿Estás seguro de que deseas eliminar este grupo?</p>
+                <button type="submit" class="btn btn-danger btn-sm">Sí</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="hideConfirmation(this)">No</button>
+              </div>
+            </form>
+            {% endif %}
+            
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      {% if perms.Grupos.add_grupo %}
+      <a class="btn btn-primary mr-2" href="{% url 'crear_grupo' %}">Agregar Grupo</a>
+      {% endif %}
+      <a class="btn btn-secondary" href="http://127.0.0.1:8000/">Atrás</a>
+    </div>
+  </div>
+</div>
+
+<script>
+function showConfirmation(button) {
+  button.style.display = 'none';
+  var confirmationDiv = button.nextElementSibling;
+  confirmationDiv.style.display = 'block';
+}
+
+function hideConfirmation(button) {
+  var confirmationDiv = button.parentNode;
+  confirmationDiv.style.display = 'none';
+  var buttonContainer = confirmationDiv.previousElementSibling;
+  buttonContainer.style.display = 'block';
+}
+</script>
+
+{% endblock %}

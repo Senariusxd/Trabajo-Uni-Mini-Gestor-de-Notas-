@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center"> <!-- Agregada la clase 'justify-content-center' para centrar el formulario -->
+            <div class="col-md-6">
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h2>Agregar Nota</h2>
+                        <form method="POST" class="mt-4">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="asignatura">Asignatura:</label>
+                                <select name="asignatura" class="form-control" required>
+                                    {% for asignatura in asignaturas %}
+                                        <option value="{{ asignatura.nombre }}">{{ asignatura.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="nota">Nota:</label>
+                                <input type="number" name="nota" class="form-control" required min="0" max="5">
+                            </div>
+                            <div class="text-right mt-4">
+                                <button type="submit" class="btn btn-primary">Agregar Nota</button>
+                                <a class="btn btn-secondary" href="javascript:history.go(-1)">Cancelar</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            background-color: #f8f9fa;
+            border: none;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-body h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555555;
+        }
+
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+    </style>
+{% endblock %}

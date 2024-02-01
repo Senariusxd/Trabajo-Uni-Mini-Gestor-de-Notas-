@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modificar Estudiante</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .text-danger {
+            color: red;
+        }
+    </style>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+            var errorMessages = document.querySelectorAll(".text-danger");
+            errorMessages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.display = "none";
+                }, 5000);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1 class="mt-4">Modificar Estudiante</h1>
+            <form method="POST" class="mt-4">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="text-danger">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a href="javascript:history.back()" class="btn btn-secondary">Atrás</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

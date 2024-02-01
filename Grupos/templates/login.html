@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <img src="{% static 'login.png' %}" alt="Foto de perfil" class="rounded-circle img-fluid" style="max-width: 100px;">
+            </div>
+            <h2 class="text-center mb-4">Iniciar sesión</h2>
+            
+            {% if messages %}
+                <div class="alert alert-danger" id="error-message">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var errorMessage = document.getElementById('error-message');
+                        errorMessage.style.display = 'none';
+                    }, 3000); // Oculta el mensaje después de 5 segundos (5000 milisegundos)
+                </script>
+            {% endif %}
+            
+            <form method="post" id="login-form">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de usuario:</label>
+                    <input type="text" id="username" name="username" required class="form-control form-control-sm" oninput="checkInputs()" onkeydown="return avoidSpace(event)">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" name="password" required class="form-control form-control-sm" oninput="checkInputs()" onkeydown="return avoidSpace(event)">
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember-me">
+                    <label class="form-check-label" for="remember-me">Recordar información</label>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-block" id="login-btn" disabled>Iniciar sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkInputs() {
+        var username = document.getElementById('username');
+        var password = document.getElementById('password');
+        var loginBtn = document.getElementById('login-btn');
+
+        if (username.value.trim() !== '' && password.value.trim() !== '') {
+            loginBtn.disabled = false;
+        } else {
+            loginBtn.disabled = true;
+        }
+    }
+
+    function avoidSpace(event) {
+        if (event.keyCode === 32) {
+            event.preventDefault();
+            return false;
+        }
+    }
+
+    // Almacena la información del usuario en el almacenamiento local cuando se envía el formulario
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+        var rememberCheckbox = document.getElementById('remember-me');
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        if (rememberCheckbox.checked) {
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
+        } else {
+            localStorage.removeItem('username');
+            localStorage.removeItem('password');
+        }
+    });
+
+    // Recupera la información del usuario del almacenamiento local y completa los campos del formulario si existe
+    window.addEventListener('load', function() {
+        var savedUsername = localStorage.getItem('username');
+        var savedPassword = localStorage.getItem('password');
+        var usernameField = document.getElementById('username');
+        var passwordField = document.getElementById('password');
+        var rememberCheckbox = document.getElementById('remember-me');
+
+        if (savedUsername && savedPassword) {
+            usernameField.value = savedUsername;
+            passwordField.value = savedPassword;
+            rememberCheckbox.checked = true;
+        }
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mb-4">Agregar Asignatura</h1>
+        <form method="post" style="margin: 0 auto; width: 50%;">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="{{ form.nombre.id_for_label }}" class="form-label">Nombre:</label>
+                        {{ form.nombre }}
+                        {% if form.errors.nombre %}
+                            <small id="nombre-error" class="text-danger">{{ form.errors.nombre }}</small>
+                        {% else %}
+                            <small id="nombre-error" class="text-muted">Ingrese un nombre válido.</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="{{ form.semestre.id_for_label }}" class="form-label">Semestre:</label>
+                        {{ form.semestre }}
+                        {% if form.errors.semestre %}
+                            <small id="semestre-error" class="text-danger">{{ form.errors.semestre }}</small>
+                        {% else %}
+                            <small id="semestre-error" class="text-muted">Ingrese un semestre válido.</small>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="{{ form.profesor_id_profesor.id_for_label }}" class="form-label">Profesor:</label>
+                        {{ form.profesor_id_profesor }}
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a class="btn btn-secondary" href="{% url 'home' %}">Atrás</a>
+            </div>
+        </form>
+
+        <h2 class="text-center mt-4">Lista de Asignaturas</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Semestre</th>
+                    <th>Profesor</th>
+                    {% if user.is_staff %}
+                    <th>Acciones</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for asignatura in asignaturas %}
+                    <tr>
+                        <td>{{ asignatura.nombre }}</td>
+                        <td>{{ asignatura.semestre }}</td>
+                        <td>{{ asignatura.profesor_id_profesor }}</td>
+                        {% if user.is_staff %}
+                        <td>
+                            <a href="{% url 'modificar_asignatura' asignatura.nombre %}" class="btn btn-primary btn-sm">Modificar</a>
+                            <form action="{% url 'eliminar_asignatura' asignatura.nombre %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta asignatura?')">Eliminar</button>
+                        </td>
+                        {% endif %}
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No hay asignaturas.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Ocultar mensaje de error después de 5 segundos
+        setTimeout(function() {
+            document.getElementById('nombre-error').style.display = 'none';
+            document.getElementById('semestre-error').style.display = 'none';
+        }, 5000);
+    </script>
+
+    <style>
+        .form-label {
+            font-weight: bold;
+            color: #555555;
+        }
+
+        .text-muted {
+            color: #888888;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .table {
+            margin-top: 20px;
+        }
+
+        .table th {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8f9fa;
+        }
+    </style>
+{% endblock %}

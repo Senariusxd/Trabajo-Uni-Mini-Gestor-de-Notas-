@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de notas</title>
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+  <style>
+    body {
+      padding-top: 60px; /* Agrega un espacio arriba para la barra de navegación */
+    }
+
+    .navbar {
+      margin-bottom: 20px; /* Agrega un espacio abajo para separar el contenido */
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+    }
+
+    .nav-link {
+      color: #fff;
+    }
+
+    .btn-danger {
+      background-color: #dc3545;
+      border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+      background-color: #c82333;
+      border-color: #bd2130;
+    }
+  </style>
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <!-- Navbar de Bootstrap -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"> <!-- Agregada la clase 'fixed-top' para que la barra de navegación se mantenga en la parte superior -->
+    <div class="container">
+      <a class="navbar-brand" href="/">Gestor de notas</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_view' %}">Administrador</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'lista_grupos' %}">Grupos</a>
+          </li>
+          {% comment %} {% if perms.Grupos.add_grupo %} {% endcomment %}
+          {% if user.is_staff %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'agregar_asignatura' %}">Asignatura</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">Sobre</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="btn btn-danger" href="{% url 'cerrar_sesion' %}">Cerrar sesión</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  {% endif %}
+
+  <!-- Contenido de la página -->
+  <div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+  </div>
+
+  <!-- Agrega el enlace al archivo JS de Bootstrap -->
+  <script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

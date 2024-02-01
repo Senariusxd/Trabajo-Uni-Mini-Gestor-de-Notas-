@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div>
+    <h1>Agregar Estudiante</h1>
+    <form method="POST" onsubmit="return validateForm()">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+        <span id="nombreError" class="error"></span> <!-- Elemento para mostrar el mensaje de error -->
+      </div>
+      <div class="mb-3">
+        <label for="apellido" class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="apellido" name="apellido" required>
+        <span id="apellidoError" class="error"></span> <!-- Elemento para mostrar el mensaje de error -->
+      </div>
+      <div class="mb-3">
+        <label for="direccion" class="form-label">Dirección</label>
+        <input type="text" class="form-control" id="direccion" name="direccion" required>
+        <span id="direccionError" class="error"></span> <!-- Elemento para mostrar el mensaje de error -->
+      </div>
+      <div class="mb-3">
+        <label for="telefono" class="form-label">Teléfono</label>
+        <input type="text" class="form-control" id="telefono" name="telefono" required>
+        <span id="telefonoError" class="error"></span> <!-- Elemento para mostrar el mensaje de error -->
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar Estudiante</button>
+      <a class="btn btn-secondary" href="javascript:history.go(-1)">Cancelar</a>
+    </form>
+  </div>
+</div>
+
+<style>
+.error {
+  color: red;
+}
+</style>
+
+<script>
+function validateForm() {
+  var nombre = document.getElementById('nombre').value;
+  var apellido = document.getElementById('apellido').value;
+  var direccion = document.getElementById('direccion').value;
+  var telefono = document.getElementById('telefono').value;
+
+  // Validar que el nombre y el apellido no contengan números
+  var regex = /^[a-zA-Z\s]+$/;
+  if (!regex.test(nombre)) {
+    document.getElementById('nombreError').textContent = 'El nombre solo debe contener letras';
+    return false;
+  } else {
+    document.getElementById('nombreError').textContent = '';
+  }
+  if (!regex.test(apellido)) {
+    document.getElementById('apellidoError').textContent = 'El apellido solo debe contener letras';
+    return false;
+  } else {
+    document.getElementById('apellidoError').textContent = '';
+  }
+
+  // Validar que la dirección no esté vacía
+  if (direccion.trim() === '') {
+    document.getElementById('direccionError').textContent = 'Por favor introduce una dirección';
+    return false;
+  } else {
+    document.getElementById('direccionError').textContent = '';
+  }
+
+  // Validar que el teléfono tenga exactamente 8 dígitos
+  var telefonoRegex = /^\d{8}$/;
+  if (!telefonoRegex.test(telefono)) {
+    document.getElementById('telefonoError').textContent = 'El teléfono debe tener exactamente 8 dígitos';
+    return false;
+  } else {
+    document.getElementById('telefonoError').textContent = '';
+  }
+
+  return true; // Envía el formulario si todas las validaciones son exitosas
+}
+</script>
+
+{% endblock %}

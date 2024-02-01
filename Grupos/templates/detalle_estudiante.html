@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ estudiante.nombre }} {{ estudiante.apellido }}</h2>
+                <h4 class="card-subtitle mb-2 text-muted">Dirección: {{ estudiante.direccion }}</h4>
+                <h4 class="card-subtitle mb-2 text-muted">Teléfono: {{ estudiante.telefono }}</h4>
+            </div>
+        </div>
+
+        <h4 class="mt-4">Asignaturas:</h4>
+        <ul class="list-group">
+            {% for asignatura in asignaturas %}
+                <li class="list-group-item">
+                    <span class="font-weight-bold">{{ asignatura.asignatura_name }}</span>
+                    <span class="float-right">Nota: {{ asignatura.nota }}</span>
+                    {% if user.is_staff %}
+                    <div class="btn-group" role="group">
+                        {% comment %} <a class="btn btn-primary btn-sm" href="{% url 'agregar_nota' asignatura_id=asignatura.pk %}">Modificar</a> {% endcomment %}
+                        <form class="d-inline" action="{% url 'eliminar_nota' asignatura_id=asignatura.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if perms.Grupos.add_grupo %}
+            <a class="btn btn-primary mt-4" href="{% url 'agregar_nota' estudiante_id=estudiante.pk %}">Agregar Nota</a>
+        {% endif %}
+
+        <a class="btn btn-secondary mt-4" href="javascript:history.go(-1)">Atrás</a>
+    </div>
+
+    <style>
+        .card {
+            background-color: #f8f9fa;
+            border: none;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card-subtitle {
+            font-size: 18px;
+            color: #888888;
+        }
+
+        .list-group-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-group-item .font-weight-bold {
+            font-size: 16px;
+        }
+
+        .list-group-item .float-right {
+            font-size: 14px;
+            color: #888888;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .btn-group {
+            margin-left: 10px;
+        }
+
+        .btn-primary.btn-sm {
+            margin-right: 5px;
+        }
+
+        .btn-danger.btn-sm {
+            margin-left: 5px;
+        }
+    </style>
+{% endblock %}
